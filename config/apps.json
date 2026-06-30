@@ -1,0 +1,33 @@
+{
+  "env": [
+    "DISPLAY=:1",
+    "PULSE_SERVER=unix:/tmp/runtime/pulse/native",
+    "LIBVA_DRIVER_NAME=iHD"
+  ],
+  "apps": [
+    {
+      "name": "RetroArch",
+      "output": "",
+      "cmd": "",
+      "image-path": "",
+      "auto-detach": "true",
+      "wait-all": "false",
+      "exit-timeout": 5,
+      "prep-cmd": [],
+      "exclude-global-prep-cmd": "false",
+      "elevated": "false"
+    },
+    {
+      "name": "Dolphin",
+      "output": "",
+      "cmd": "dolphin-emu --batch --user=/config/dolphin",
+      "image-path": "",
+      "auto-detach": "true",
+      "wait-all": "false",
+      "exit-timeout": 10,
+      "prep-cmd": [],
+      "exclude-global-prep-cmd": "false",
+      "elevated": "false"
+    }
+  ]
+}

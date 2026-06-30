@@ -1,0 +1,12 @@
+# PulseAudio startup script for retroshine
+# Provides a virtual null sink; Sunshine auto-captures from its monitor source.
+
+# Unix socket for local clients (RetroArch, Sunshine)
+load-module module-native-protocol-unix auth-anonymous=1 socket=/tmp/runtime/pulse/native
+
+# Virtual output — RetroArch sends audio here
+# PulseAudio automatically exposes virtual_sink.monitor as a source
+load-module module-null-sink sink_name=virtual_sink sink_properties=device.description="RetroShine_Virtual_Output"
+
+set-default-sink   virtual_sink
+set-default-source virtual_sink.monitor

@@ -1,0 +1,51 @@
+services:
+  retroshine:
+    image: retroshine:latest
+    build:
+      context: .
+      args:
+        SUNSHINE_VERSION: "0.23.1"
+    container_name: retroshine
+    restart: unless-stopped
+
+    # host networking required for Moonlight mDNS auto-discovery
+    # and low-latency UDP streaming without Docker NAT overhead
+    network_mode: host
+
+    devices:
+      # Intel iGPU display engine — Xorg modesetting driver
+      - /dev/dri/card0:/dev/dri/card0
+      # Intel render node — Sunshine VAAPI + RetroArch/Dolphin Vulkan
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      # Xorg VT management: tty0 for VT state, tty7 for the X session
+      # (VT7 is the traditional X11 VT; VT1-6 are gettys on headless TrueNAS)
+      - /dev/tty0:/dev/tty0
+      - /dev/tty7:/dev/tty7
+      # Sunshine creates virtual gamepads here when Moonlight clients connect
+      - /dev/uinput:/dev/uinput
+
+    volumes:
+      # Persistent state: saves, configs, cores, Sunshine pairing, etc.
+      - retroshine-config:/config
+      # Game library (read-only inside the container)
+      - /mnt/main/data/media/games:/games:ro
+      # Live bind-mount of /dev/input so RetroArch and Dolphin see virtual
+      # controllers that Sunshine creates via uinput at connect time
+      - /dev/input:/dev/input
+
+    environment:
+      # Sunshine web UI credentials — change before first boot
+      - SUNSHINE_USER=admin
+      - SUNSHINE_PASS=changeme
+      - LIBVA_DRIVER_NAME=iHD
+
+    shm_size: 256m
+
+    # If Xorg refuses to start with "cannot open /dev/tty0" errors,
+    # uncomment this as a fallback — it grants full device access at the
+    # cost of broader container privileges (acceptable for a homelab).
+    #privileged: true
+
+volumes:
+  retroshine-config:
+    driver: local

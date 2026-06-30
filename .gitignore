@@ -1,0 +1,3 @@
+# Don't accidentally commit credentials you bake into local copies
+*.env
+.env.*
