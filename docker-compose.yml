@@ -13,8 +13,8 @@ services:
     network_mode: host
 
     devices:
-      # Intel iGPU display engine — Xorg modesetting driver
-      - /dev/dri/card0:/dev/dri/card0
+      # VKMS virtual display (testing only — replace with card0 + HDMI dummy plug in prod)
+      - /dev/dri/card1:/dev/dri/card1
       # Intel render node — Sunshine VAAPI + RetroArch/Dolphin Vulkan
       - /dev/dri/renderD128:/dev/dri/renderD128
       # Xorg VT management: tty0 for VT state, tty7 for the X session
