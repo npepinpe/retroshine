@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        SUNSHINE_VERSION: "0.23.1"
+        SUNSHINE_VERSION: "2026.516.143833"
         DOLPHIN_FLATPAK_URL: "https://dl.dolphin-emu.org/releases/2606/dolphin-2606-x86_64.flatpak"
     container_name: retroshine
     restart: unless-stopped
