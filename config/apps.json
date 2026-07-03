@@ -28,6 +28,18 @@
       "prep-cmd": [],
       "exclude-global-prep-cmd": "false",
       "elevated": "false"
+    },
+    {
+      "name": "Dusklight",
+      "output": "",
+      "cmd": "dusklight",
+      "image-path": "",
+      "auto-detach": "true",
+      "wait-all": "false",
+      "exit-timeout": 10,
+      "prep-cmd": [],
+      "exclude-global-prep-cmd": "false",
+      "elevated": "false"
     }
   ]
 }

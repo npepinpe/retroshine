@@ -12,6 +12,7 @@ mkdir -p \
     "${CONFIG_DIR}/retroarch/cores" \
     "${CONFIG_DIR}/retroarch/info" \
     "${CONFIG_DIR}/dolphin/Config" \
+    "${CONFIG_DIR}/dusklight" \
     "${CONFIG_DIR}/logs" \
     /tmp/runtime/pulse
 chmod 700 /tmp/runtime
@@ -32,6 +33,10 @@ for f in Dolphin.ini GFX.ini; do
         cp "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/Config/${f}"
     fi
 done
+
+# ── Dusklight saves → /config volume ─────────────────────────────────────
+mkdir -p /root/.local/share/TwilitRealm
+ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight
 
 # ── Sunshine credentials ──────────────────────────────────────────────────
 # Set via SUNSHINE_USER / SUNSHINE_PASS env vars.

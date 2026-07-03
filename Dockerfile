@@ -61,6 +61,22 @@ RUN printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "
         > /usr/local/bin/dolphin-emu \
     && chmod +x /usr/local/bin/dolphin-emu
 
+# Dusklight — native AppImage extracted at build time (avoids FUSE requirement in Docker).
+# AppRun sets APPDIR and LD_LIBRARY_PATH relative to the extraction directory.
+# Saves land in ~/.local/share/TwilitRealm/Dusklight; entrypoint symlinks that to /config/dusklight.
+ARG DUSKLIGHT_VERSION=1.4.1
+RUN wget -q \
+        "https://github.com/TwilitRealm/dusklight/releases/download/v${DUSKLIGHT_VERSION}/Dusklight-v${DUSKLIGHT_VERSION}-linux-x86_64.AppImage" \
+        -O /tmp/dusklight.AppImage \
+    && chmod +x /tmp/dusklight.AppImage \
+    && cd /opt && /tmp/dusklight.AppImage --appimage-extract \
+    && mv /opt/squashfs-root /opt/dusklight \
+    && rm /tmp/dusklight.AppImage
+
+RUN printf '#!/bin/sh\ncd /opt/dusklight && exec ./AppRun "$@"\n' \
+        > /usr/local/bin/dusklight \
+    && chmod +x /usr/local/bin/dusklight
+
 # Install Sunshine from LizardByte GitHub releases.
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases
 # for the exact filename and override: --build-arg SUNSHINE_VERSION=<version>
