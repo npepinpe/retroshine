@@ -8,7 +8,7 @@
     {
       "name": "RetroArch",
       "output": "",
-      "cmd": "",
+      "cmd": "retroarch --config /config/retroarch/retroarch.cfg",
       "image-path": "",
       "auto-detach": "true",
       "wait-all": "false",
