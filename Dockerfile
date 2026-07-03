@@ -57,6 +57,7 @@ RUN test -n "${DOLPHIN_FLATPAK_URL}" \
          echo "then rebuild with:"; \
          echo "  docker build --build-arg DOLPHIN_FLATPAK_URL=<url> ."; \
          echo ""; exit 1; } \
+    && apt-get update \
     && apt-get install -y flatpak \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
