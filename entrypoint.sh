@@ -11,7 +11,7 @@ mkdir -p \
     "${CONFIG_DIR}/retroarch/screenshots" \
     "${CONFIG_DIR}/retroarch/cores" \
     "${CONFIG_DIR}/retroarch/info" \
-    "${CONFIG_DIR}/dolphin" \
+    "${CONFIG_DIR}/dolphin/Config" \
     "${CONFIG_DIR}/logs" \
     /tmp/runtime/pulse
 chmod 700 /tmp/runtime
@@ -28,8 +28,8 @@ if [ ! -f "${CONFIG_DIR}/retroarch/retroarch.cfg" ]; then
 fi
 
 for f in Dolphin.ini GFX.ini; do
-    if [ ! -f "${CONFIG_DIR}/dolphin/${f}" ]; then
-        cp "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/${f}"
+    if [ ! -f "${CONFIG_DIR}/dolphin/Config/${f}" ]; then
+        cp "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/Config/${f}"
     fi
 done
 
