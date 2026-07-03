@@ -33,6 +33,10 @@ services:
       - SUNSHINE_PASS   # set in .env on the NAS; falls back to 'changeme' if unset
       - LIBVA_DRIVER_NAME=iHD
 
+    cap_add:
+      - SYS_ADMIN   # KMS capture: DRM lease from Xorg
+      - SYS_NICE    # real-time priority for Sunshine encoder/capture threads
+
     shm_size: 256m
 
     #privileged: true  # fallback if Xorg refuses to open /dev/tty0

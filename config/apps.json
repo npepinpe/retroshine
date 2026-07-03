@@ -21,7 +21,7 @@
       "name": "Dusklight",
       "output": "",
       "cmd": "dusklight",
-      "image-path": "",
+      "image-path": "/root/.config/sunshine/covers/igdb_401002.png",
       "auto-detach": "true",
       "wait-all": "false",
       "exit-timeout": 10,

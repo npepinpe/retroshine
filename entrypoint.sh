@@ -6,6 +6,7 @@ CONFIG_DIR=/config
 # ── Directories ──────────────────────────────────────────────────────────────
 mkdir -p \
     "${CONFIG_DIR}/sunshine" \
+    "${CONFIG_DIR}/sunshine/covers" \
     "${CONFIG_DIR}/retroarch/saves" \
     "${CONFIG_DIR}/retroarch/states" \
     "${CONFIG_DIR}/retroarch/screenshots" \
@@ -24,9 +25,9 @@ chmod 700 /tmp/runtime
 if [ ! -f "${CONFIG_DIR}/sunshine.conf" ]; then
     cp /etc/retroshine/sunshine.conf "${CONFIG_DIR}/sunshine.conf"
 fi
-if [ ! -f "${CONFIG_DIR}/sunshine/apps.json" ]; then
-    cp /etc/retroshine/apps.json "${CONFIG_DIR}/sunshine/apps.json"
-fi
+# apps.json is managed via git; always overwrite so deploys take effect without
+# manual intervention. (Do NOT use the web UI to add apps — it won't persist.)
+cp /etc/retroshine/apps.json "${CONFIG_DIR}/sunshine/apps.json"
 
 if [ ! -f "${CONFIG_DIR}/retroarch/retroarch.cfg" ]; then
     cp /etc/retroshine/retroarch.cfg "${CONFIG_DIR}/retroarch/retroarch.cfg"
@@ -45,6 +46,11 @@ if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
     cp /etc/retroshine/es-de/settings/es_settings.xml \
        "${CONFIG_DIR}/es-de/settings/es_settings.xml"
 fi
+
+# ── Sunshine covers → /config volume ─────────────────────────────────────
+# Dusklight writes its built-in cover art here; symlink keeps it persistent.
+mkdir -p /root/.config/sunshine
+ln -sfn "${CONFIG_DIR}/sunshine/covers" /root/.config/sunshine/covers
 
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
