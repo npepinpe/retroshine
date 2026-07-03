@@ -50,17 +50,14 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Dolphin Flatpak — user-mode install baked into the image at build time.
-# --user avoids flatpak-system-helper (which needs systemd/D-Bus system bus).
-# If this hangs, fall back to the first-boot approach: remove this block,
-# add DOLPHIN_FLATPAK_URL to docker-compose environment, and restore the
-# install logic in entrypoint.sh.
+# Dolphin Flatpak — system-wide install baked into the image at build time.
+# Build locally (not on the NAS) where download speed is adequate.
 ARG DOLPHIN_FLATPAK_URL="https://dl.dolphin-emu.org/releases/2606/dolphin-2606-x86_64.flatpak"
 RUN wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
-    && flatpak install --user --noninteractive --bundle /tmp/dolphin.flatpak \
+    && flatpak install --system --noninteractive --bundle /tmp/dolphin.flatpak \
     && rm /tmp/dolphin.flatpak
 
-RUN printf '#!/bin/sh\nexec flatpak run --user --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
+RUN printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
         > /usr/local/bin/dolphin-emu \
     && chmod +x /usr/local/bin/dolphin-emu
 
