@@ -13,6 +13,7 @@ mkdir -p \
     "${CONFIG_DIR}/retroarch/info" \
     "${CONFIG_DIR}/dolphin/Config" \
     "${CONFIG_DIR}/dusklight" \
+    "${CONFIG_DIR}/es-de/settings" \
     "${CONFIG_DIR}/logs" \
     /tmp/runtime/pulse
 chmod 700 /tmp/runtime
@@ -36,6 +37,14 @@ for f in Dolphin.ini GFX.ini; do
         cp "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/Config/${f}"
     fi
 done
+
+# ── ES-DE config → /config volume ────────────────────────────────────────
+mkdir -p /root/.config
+ln -sfn "${CONFIG_DIR}/es-de" /root/.config/ES-DE
+if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
+    cp /etc/retroshine/es-de/settings/es_settings.xml \
+       "${CONFIG_DIR}/es-de/settings/es_settings.xml"
+fi
 
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm

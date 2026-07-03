@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config>
+    <!-- ROM library root — subdirs map to systems (gc/, snes/, nes/, psx/, etc.) -->
+    <string name="ROMDirectory" value="/games" />
+    <!-- Don't show the setup wizard on first boot -->
+    <bool name="WizardCompleted" value="true" />
+</config>

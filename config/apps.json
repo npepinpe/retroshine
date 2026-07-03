@@ -6,21 +6,9 @@
   ],
   "apps": [
     {
-      "name": "RetroArch",
+      "name": "EmulationStation",
       "output": "",
-      "cmd": "retroarch --config /config/retroarch/retroarch.cfg",
-      "image-path": "",
-      "auto-detach": "true",
-      "wait-all": "false",
-      "exit-timeout": 5,
-      "prep-cmd": [],
-      "exclude-global-prep-cmd": "false",
-      "elevated": "false"
-    },
-    {
-      "name": "Dolphin",
-      "output": "",
-      "cmd": "dolphin-emu --user=/config/dolphin",
+      "cmd": "emulationstation",
       "image-path": "",
       "auto-detach": "true",
       "wait-all": "false",

@@ -77,6 +77,20 @@ RUN printf '#!/bin/sh\ncd /opt/dusklight && exec ./AppRun "$@"\n' \
         > /usr/local/bin/dusklight \
     && chmod +x /usr/local/bin/dusklight
 
+# EmulationStation-DE — controller-driven game launcher.
+# Extracted from AppImage at build time (avoids FUSE requirement in Docker).
+# Update ESDE_URL from: https://gitlab.com/es-de/emulationstation-de/-/releases
+ARG ESDE_URL="https://gitlab.com/es-de/emulationstation-de/-/package_files/288156961/download"
+RUN wget -q "${ESDE_URL}" -O /tmp/esde.AppImage \
+    && chmod +x /tmp/esde.AppImage \
+    && cd /opt && /tmp/esde.AppImage --appimage-extract \
+    && mv /opt/squashfs-root /opt/es-de \
+    && rm /tmp/esde.AppImage
+
+RUN printf '#!/bin/sh\ncd /opt/es-de && exec ./AppRun "$@"\n' \
+        > /usr/local/bin/emulationstation \
+    && chmod +x /usr/local/bin/emulationstation
+
 # Install Sunshine from LizardByte GitHub releases.
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases
 # for the exact filename and override: --build-arg SUNSHINE_VERSION=<version>
@@ -98,6 +112,7 @@ COPY config/retroarch.cfg           /etc/retroshine/retroarch.cfg
 COPY config/pulse.pa                /etc/retroshine/pulse.pa
 COPY config/dolphin/Dolphin.ini     /etc/retroshine/dolphin/Dolphin.ini
 COPY config/dolphin/GFX.ini         /etc/retroshine/dolphin/GFX.ini
+COPY config/es-de/settings/es_settings.xml /etc/retroshine/es-de/settings/es_settings.xml
 COPY scripts/wait-for-x.sh         /usr/local/bin/wait-for-x.sh
 COPY entrypoint.sh                  /entrypoint.sh
 
