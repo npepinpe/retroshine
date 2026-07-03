@@ -37,6 +37,9 @@ services:
       - SYS_ADMIN   # KMS capture: DRM lease from Xorg
       - SYS_NICE    # real-time priority for Sunshine encoder/capture threads
 
+    device_cgroup_rules:
+      - 'c 13:* rmw'  # input subsystem: allow dynamically created /dev/input/eventX nodes
+
     shm_size: 256m
 
     #privileged: true  # fallback if Xorg refuses to open /dev/tty0

@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     # Flatpak for Dolphin (user-mode install; no flatpak-system-helper/systemd needed)
     flatpak \
     dbus \
+    dbus-x11 \
     # Process manager
     supervisor \
     procps \
