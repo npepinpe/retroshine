@@ -4,9 +4,17 @@ services:
     container_name: retroshine
     restart: unless-stopped
 
-    # host networking is required for Moonlight mDNS auto-discovery;
-    # it is incompatible with named Docker networks
-    network_mode: host
+    networks:
+      - retroshine
+
+    ports:
+      - "47984:47984/tcp"
+      - "47989:47989/tcp"
+      - "47990:47990/tcp"
+      - "47998:47998/udp"
+      - "47999:47999/udp"
+      - "48000:48000/udp"
+      - "48010:48010/tcp"
 
     devices:
       - /dev/dri/card0:/dev/dri/card0
@@ -28,6 +36,9 @@ services:
     shm_size: 256m
 
     #privileged: true  # fallback if Xorg refuses to open /dev/tty0
+
+networks:
+  retroshine:
 
 volumes:
   retroshine-config:
