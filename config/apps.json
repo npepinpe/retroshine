@@ -1,33 +1,29 @@
 {
-  "env": [
-    "DISPLAY=:1",
-    "PULSE_SERVER=unix:/tmp/runtime/pulse/native",
-    "LIBVA_DRIVER_NAME=iHD"
-  ],
-  "apps": [
-    {
-      "name": "EmulationStation",
-      "output": "",
-      "cmd": "emulationstation",
-      "image-path": "",
-      "auto-detach": "true",
-      "wait-all": "false",
-      "exit-timeout": 10,
-      "prep-cmd": [],
-      "exclude-global-prep-cmd": "false",
-      "elevated": "false"
+    "env": {
+        "PATH": "$(PATH):$(HOME)/.local/bin"
     },
-    {
-      "name": "Dusklight",
-      "output": "",
-      "cmd": "dusklight",
-      "image-path": "/root/.config/sunshine/covers/igdb_401002.png",
-      "auto-detach": "true",
-      "wait-all": "false",
-      "exit-timeout": 10,
-      "prep-cmd": [],
-      "exclude-global-prep-cmd": "false",
-      "elevated": "false"
-    }
-  ]
+    "apps": [
+        {
+            "auto-detach": true,
+            "cmd": "emulationstation",
+            "elevated": false,
+            "exclude-global-prep-cmd": false,
+            "exit-timeout": 5,
+            "image-path": "/root/.config/sunshine/covers/igdb_386308.png",
+            "name": "Emulation Station",
+            "output": "",
+            "wait-all": true
+        },
+        {
+            "auto-detach": true,
+            "cmd": "dusklight",
+            "elevated": false,
+            "exclude-global-prep-cmd": false,
+            "exit-timeout": 5,
+            "image-path": "/root/.config/sunshine/covers/igdb_401002.png",
+            "name": "Dusklight",
+            "output": "",
+            "wait-all": true
+        }
+    ]
 }

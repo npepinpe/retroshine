@@ -47,10 +47,12 @@ if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
        "${CONFIG_DIR}/es-de/settings/es_settings.xml"
 fi
 
-# ── Sunshine covers → /config volume ─────────────────────────────────────
-# Dusklight writes its built-in cover art here; symlink keeps it persistent.
+# ── Sunshine default config dir → /config volume ──────────────────────────
+# Sunshine's GameStream XML handler ignores file_apps and always reads apps
+# from the default path; symlink both into the volume instead.
 mkdir -p /root/.config/sunshine
-ln -sfn "${CONFIG_DIR}/sunshine/covers" /root/.config/sunshine/covers
+ln -sfn "${CONFIG_DIR}/sunshine/apps.json" /root/.config/sunshine/apps.json
+ln -sfn "${CONFIG_DIR}/sunshine/covers"    /root/.config/sunshine/covers
 
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
