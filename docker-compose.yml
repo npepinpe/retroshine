@@ -29,8 +29,8 @@ services:
       - /dev/input:/dev/input
 
     environment:
-      - SUNSHINE_USER=admin
-      - SUNSHINE_PASS=changeme
+      - SUNSHINE_USER   # set in .env on the NAS; falls back to 'admin' if unset
+      - SUNSHINE_PASS   # set in .env on the NAS; falls back to 'changeme' if unset
       - LIBVA_DRIVER_NAME=iHD
 
     shm_size: 256m
