@@ -92,12 +92,6 @@ RUN printf '#!/bin/sh\ncd /opt/es-de && exec ./AppRun "$@"\n' \
         > /usr/local/bin/emulationstation \
     && chmod +x /usr/local/bin/emulationstation
 
-# Extract ES-DE icon from the AppDir for use as Sunshine cover art.
-# AppDir spec places the icon at the root named after the app id.
-RUN mkdir -p /etc/retroshine/covers \
-    && find /opt/es-de -maxdepth 1 -name "*.png" | head -1 \
-       | xargs -I{} cp {} /etc/retroshine/covers/es-de.png
-
 # Install Sunshine from LizardByte GitHub releases.
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases
 # for the exact filename and override: --build-arg SUNSHINE_VERSION=<version>

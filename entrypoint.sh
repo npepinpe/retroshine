@@ -52,11 +52,6 @@ mkdir -p /root/.config/sunshine
 ln -sfn "${CONFIG_DIR}/sunshine/apps.json" /root/.config/sunshine/apps.json
 ln -sfn "${CONFIG_DIR}/sunshine/covers"    /root/.config/sunshine/covers
 
-# Seed bundled cover art (ES-DE logo from extracted AppImage)
-if [ ! -f "${CONFIG_DIR}/sunshine/covers/es-de.png" ] && [ -f /etc/retroshine/covers/es-de.png ]; then
-    cp /etc/retroshine/covers/es-de.png "${CONFIG_DIR}/sunshine/covers/es-de.png"
-fi
-
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
 ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight

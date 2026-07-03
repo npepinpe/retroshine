@@ -2,6 +2,7 @@ services:
   retroshine:
     image: retroshine:latest
     container_name: retroshine
+    hostname: pandora
     restart: unless-stopped
 
     networks:
