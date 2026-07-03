@@ -58,10 +58,10 @@ RUN test -n "${DOLPHIN_FLATPAK_URL}" \
          echo "  docker build --build-arg DOLPHIN_FLATPAK_URL=<url> ."; \
          echo ""; exit 1; } \
     && apt-get update \
-    && apt-get install -y flatpak \
+    && apt-get install -y flatpak dbus \
     && rm -rf /var/lib/apt/lists/* \
     && wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
-    && flatpak install --noninteractive --bundle /tmp/dolphin.flatpak \
+    && dbus-run-session -- flatpak install --noninteractive --system --bundle /tmp/dolphin.flatpak \
     && rm /tmp/dolphin.flatpak \
     # Wrapper so the rest of the config can call dolphin-emu as a plain binary
     && printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
