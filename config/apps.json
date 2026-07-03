@@ -9,7 +9,7 @@
             "elevated": false,
             "exclude-global-prep-cmd": false,
             "exit-timeout": 5,
-            "image-path": "/root/.config/sunshine/covers/igdb_386308.png",
+            "image-path": "/root/.config/sunshine/covers/es-de.png",
             "name": "Emulation Station",
             "output": "",
             "wait-all": true
