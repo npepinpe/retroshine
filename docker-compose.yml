@@ -5,6 +5,8 @@ services:
       context: .
       args:
         SUNSHINE_VERSION: "0.23.1"
+        # Find the x86_64.AppImage URL at https://github.com/dolphin-emu/dolphin/releases
+        DOLPHIN_APPIMAGE_URL: ""
     container_name: retroshine
     restart: unless-stopped
 

@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     wget \
-    jq \
     software-properties-common \
     gnupg \
     && add-apt-repository restricted \
@@ -49,10 +48,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Dolphin via AppImage — not in Ubuntu 24.04 repos.
-# Fetches the latest release from GitHub at build time.
-RUN DOLPHIN_URL=$(curl -fsSL "https://api.github.com/repos/dolphin-emu/dolphin/releases?per_page=5" \
-        | jq -r '.[0].assets[] | select(.name | endswith("x86_64.AppImage")) | .browser_download_url') \
-    && wget -q "$DOLPHIN_URL" -O /tmp/dolphin.AppImage \
+# Find the x86_64.AppImage URL at https://github.com/dolphin-emu/dolphin/releases
+# and pass it at build time:
+#   docker build --build-arg DOLPHIN_APPIMAGE_URL=<url> .
+ARG DOLPHIN_APPIMAGE_URL=""
+RUN test -n "${DOLPHIN_APPIMAGE_URL}" \
+    || { echo ""; echo "ERROR: DOLPHIN_APPIMAGE_URL is not set."; \
+         echo "Visit https://github.com/dolphin-emu/dolphin/releases"; \
+         echo "copy the x86_64.AppImage download URL, then rebuild with:"; \
+         echo "  docker build --build-arg DOLPHIN_APPIMAGE_URL=<url> ."; \
+         echo ""; exit 1; } \
+    && wget -q "${DOLPHIN_APPIMAGE_URL}" -O /tmp/dolphin.AppImage \
     && chmod +x /tmp/dolphin.AppImage \
     && /tmp/dolphin.AppImage --appimage-extract \
     && mv squashfs-root /opt/dolphin \
