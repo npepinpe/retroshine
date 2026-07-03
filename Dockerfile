@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     wget \
+    jq \
     software-properties-common \
     gnupg \
     && add-apt-repository restricted \
@@ -18,9 +19,9 @@ RUN add-apt-repository ppa:libretro/stable
 
 RUN apt-get update && apt-get install -y \
     # Xorg with modesetting driver (DRI3 hardware-accelerated GL/Vulkan)
+    # xserver-xorg-input-void dropped in Ubuntu 24.04; handled via AllowEmptyInput in xorg.conf
     xserver-xorg-core \
     xserver-xorg-input-libinput \
-    xserver-xorg-input-void \
     x11-xserver-utils \
     x11-utils \
     xauth \
@@ -41,15 +42,22 @@ RUN apt-get update && apt-get install -y \
     libglx-mesa0 \
     # RetroArch
     retroarch \
-    # Dolphin — GameCube / Wii emulator (standalone, not the libretro core)
-    # Ubuntu 24.04 ships a recent build in universe; for the absolute latest
-    # replace with the AppImage approach documented in docker-compose.yml comments
-    dolphin-emu \
     # Process manager
     supervisor \
     procps \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Dolphin via AppImage — not in Ubuntu 24.04 repos.
+# Fetches the latest release from GitHub at build time.
+RUN DOLPHIN_URL=$(curl -fsSL "https://api.github.com/repos/dolphin-emu/dolphin/releases?per_page=5" \
+        | jq -r '.[0].assets[] | select(.name | endswith("x86_64.AppImage")) | .browser_download_url') \
+    && wget -q "$DOLPHIN_URL" -O /tmp/dolphin.AppImage \
+    && chmod +x /tmp/dolphin.AppImage \
+    && /tmp/dolphin.AppImage --appimage-extract \
+    && mv squashfs-root /opt/dolphin \
+    && ln -sf /opt/dolphin/AppRun /usr/local/bin/dolphin-emu \
+    && rm /tmp/dolphin.AppImage
 
 # Install Sunshine from LizardByte GitHub releases.
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases
@@ -71,8 +79,8 @@ COPY config/retroarch.cfg           /etc/retroshine/retroarch.cfg
 COPY config/pulse.pa                /etc/retroshine/pulse.pa
 COPY config/dolphin/Dolphin.ini     /etc/retroshine/dolphin/Dolphin.ini
 COPY config/dolphin/GFX.ini         /etc/retroshine/dolphin/GFX.ini
-COPY scripts/wait-for-x.sh  /usr/local/bin/wait-for-x.sh
-COPY entrypoint.sh           /entrypoint.sh
+COPY scripts/wait-for-x.sh         /usr/local/bin/wait-for-x.sh
+COPY entrypoint.sh                  /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh /usr/local/bin/wait-for-x.sh
 
