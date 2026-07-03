@@ -40,8 +40,6 @@ for f in Dolphin.ini GFX.ini; do
 done
 
 # ── ES-DE config → /config volume ────────────────────────────────────────
-mkdir -p /root/.config
-ln -sfn "${CONFIG_DIR}/es-de" /root/.config/ES-DE
 if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
     cp /etc/retroshine/es-de/settings/es_settings.xml \
        "${CONFIG_DIR}/es-de/settings/es_settings.xml"

@@ -5,7 +5,7 @@
     "apps": [
         {
             "auto-detach": true,
-            "cmd": "emulationstation",
+            "cmd": "emulationstation --home /config/es-de",
             "elevated": false,
             "exclude-global-prep-cmd": false,
             "exit-timeout": 5,
