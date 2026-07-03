@@ -18,13 +18,14 @@ mkdir -p \
 chmod 700 /tmp/runtime
 
 # ── Seed default configs (only on first boot) ─────────────────────────────
-# sunshine.conf and apps.json go in /config/ root — that's where Sunshine
-# looks for them by default (and what --creds writes to without a path arg).
-for f in sunshine.conf apps.json; do
-    if [ ! -f "${CONFIG_DIR}/${f}" ]; then
-        cp "/etc/retroshine/${f}" "${CONFIG_DIR}/${f}"
-    fi
-done
+# sunshine.conf goes in /config/ root (Sunshine's default config location).
+# apps.json is looked up relative to file_state, so it goes in /config/sunshine/.
+if [ ! -f "${CONFIG_DIR}/sunshine.conf" ]; then
+    cp /etc/retroshine/sunshine.conf "${CONFIG_DIR}/sunshine.conf"
+fi
+if [ ! -f "${CONFIG_DIR}/sunshine/apps.json" ]; then
+    cp /etc/retroshine/apps.json "${CONFIG_DIR}/sunshine/apps.json"
+fi
 
 if [ ! -f "${CONFIG_DIR}/retroarch/retroarch.cfg" ]; then
     cp /etc/retroshine/retroarch.cfg "${CONFIG_DIR}/retroarch/retroarch.cfg"
