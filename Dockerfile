@@ -41,30 +41,26 @@ RUN apt-get update && apt-get install -y \
     libglx-mesa0 \
     # RetroArch
     retroarch \
+    # Flatpak for Dolphin (user-mode install; no flatpak-system-helper/systemd needed)
+    flatpak \
+    dbus \
     # Process manager
     supervisor \
     procps \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Dolphin via Flatpak bundle — not in Ubuntu 24.04 repos.
-# Get the .flatpak URL from https://dolphin-emu.org/download/ and pass at build time:
-#   docker build --build-arg DOLPHIN_FLATPAK_URL=<url> .
-ARG DOLPHIN_FLATPAK_URL=""
-RUN test -n "${DOLPHIN_FLATPAK_URL}" \
-    || { echo ""; echo "ERROR: DOLPHIN_FLATPAK_URL is not set."; \
-         echo "Get the x86_64.flatpak URL from https://dolphin-emu.org/download/"; \
-         echo "then rebuild with:"; \
-         echo "  docker build --build-arg DOLPHIN_FLATPAK_URL=<url> ."; \
-         echo ""; exit 1; } \
-    && apt-get update \
-    && apt-get install -y flatpak dbus \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
-    && dbus-run-session -- flatpak install --noninteractive --system --bundle /tmp/dolphin.flatpak \
-    && rm /tmp/dolphin.flatpak \
-    # Wrapper so the rest of the config can call dolphin-emu as a plain binary
-    && printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
+# Dolphin Flatpak — user-mode install baked into the image at build time.
+# --user avoids flatpak-system-helper (which needs systemd/D-Bus system bus).
+# If this hangs, fall back to the first-boot approach: remove this block,
+# add DOLPHIN_FLATPAK_URL to docker-compose environment, and restore the
+# install logic in entrypoint.sh.
+ARG DOLPHIN_FLATPAK_URL="https://dl.dolphin-emu.org/releases/2606/dolphin-2606-x86_64.flatpak"
+RUN wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
+    && flatpak install --user --noninteractive --bundle /tmp/dolphin.flatpak \
+    && rm /tmp/dolphin.flatpak
+
+RUN printf '#!/bin/sh\nexec flatpak run --user --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
         > /usr/local/bin/dolphin-emu \
     && chmod +x /usr/local/bin/dolphin-emu
 
