@@ -65,9 +65,10 @@ RUN printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases
 # for the exact filename and override: --build-arg SUNSHINE_VERSION=<version>
 ARG SUNSHINE_VERSION=2026.516.143833
-RUN wget -q \
-    "https://github.com/LizardByte/Sunshine/releases/download/v${SUNSHINE_VERSION}/sunshine-ubuntu-24.04-amd64.deb" \
-    -O /tmp/sunshine.deb \
+RUN apt-get update \
+    && wget -q \
+        "https://github.com/LizardByte/Sunshine/releases/download/v${SUNSHINE_VERSION}/sunshine-ubuntu-24.04-amd64.deb" \
+        -O /tmp/sunshine.deb \
     && apt-get install -y /tmp/sunshine.deb \
     && rm /tmp/sunshine.deb \
     && rm -rf /var/lib/apt/lists/*
