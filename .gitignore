@@ -1,3 +1,6 @@
 # Don't accidentally commit credentials you bake into local copies
 *.env
 .env.*
+
+# Local deploy script (contains NAS host/user, not for version control)
+deploy.sh
