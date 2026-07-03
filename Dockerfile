@@ -47,23 +47,25 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Dolphin via AppImage — not in Ubuntu 24.04 repos.
-# Find the x86_64.AppImage URL at https://github.com/dolphin-emu/dolphin/releases
-# and pass it at build time:
-#   docker build --build-arg DOLPHIN_APPIMAGE_URL=<url> .
-ARG DOLPHIN_APPIMAGE_URL=""
-RUN test -n "${DOLPHIN_APPIMAGE_URL}" \
-    || { echo ""; echo "ERROR: DOLPHIN_APPIMAGE_URL is not set."; \
-         echo "Visit https://github.com/dolphin-emu/dolphin/releases"; \
-         echo "copy the x86_64.AppImage download URL, then rebuild with:"; \
-         echo "  docker build --build-arg DOLPHIN_APPIMAGE_URL=<url> ."; \
+# Install Dolphin via Flatpak bundle — not in Ubuntu 24.04 repos.
+# Get the .flatpak URL from https://dolphin-emu.org/download/ and pass at build time:
+#   docker build --build-arg DOLPHIN_FLATPAK_URL=<url> .
+ARG DOLPHIN_FLATPAK_URL=""
+RUN test -n "${DOLPHIN_FLATPAK_URL}" \
+    || { echo ""; echo "ERROR: DOLPHIN_FLATPAK_URL is not set."; \
+         echo "Get the x86_64.flatpak URL from https://dolphin-emu.org/download/"; \
+         echo "then rebuild with:"; \
+         echo "  docker build --build-arg DOLPHIN_FLATPAK_URL=<url> ."; \
          echo ""; exit 1; } \
-    && wget -q "${DOLPHIN_APPIMAGE_URL}" -O /tmp/dolphin.AppImage \
-    && chmod +x /tmp/dolphin.AppImage \
-    && /tmp/dolphin.AppImage --appimage-extract \
-    && mv squashfs-root /opt/dolphin \
-    && ln -sf /opt/dolphin/AppRun /usr/local/bin/dolphin-emu \
-    && rm /tmp/dolphin.AppImage
+    && apt-get install -y flatpak \
+    && rm -rf /var/lib/apt/lists/* \
+    && wget -q "${DOLPHIN_FLATPAK_URL}" -O /tmp/dolphin.flatpak \
+    && flatpak install --noninteractive --bundle /tmp/dolphin.flatpak \
+    && rm /tmp/dolphin.flatpak \
+    # Wrapper so the rest of the config can call dolphin-emu as a plain binary
+    && printf '#!/bin/sh\nexec flatpak run --nosandbox org.DolphinEmu.dolphin-emu "$@"\n' \
+        > /usr/local/bin/dolphin-emu \
+    && chmod +x /usr/local/bin/dolphin-emu
 
 # Install Sunshine from LizardByte GitHub releases.
 # If the wget fails, check https://github.com/LizardByte/Sunshine/releases

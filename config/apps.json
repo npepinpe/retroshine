@@ -20,7 +20,7 @@
     {
       "name": "Dolphin",
       "output": "",
-      "cmd": "dolphin-emu --batch --user=/config/dolphin",
+      "cmd": "dolphin-emu --user=/config/dolphin",
       "image-path": "",
       "auto-detach": "true",
       "wait-all": "false",
