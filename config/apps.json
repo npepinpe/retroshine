@@ -22,7 +22,7 @@
             "exit-timeout": 5,
             "image-path": "/root/.config/sunshine/covers/igdb_401002.png",
             "name": "Dusklight",
-            "output": "",
+            "output": "/config/logs/dusklight.log",
             "wait-all": true
         }
     ]

@@ -4,3 +4,4 @@
 
 # Local deploy script (contains NAS host/user, not for version control)
 deploy.sh
+docker-compose-local.yml

@@ -28,6 +28,7 @@ services:
       - retroshine-config:/config
       - retroshine-games:/games:ro
       - /dev/input:/dev/input
+      - /run/udev:/run/udev:ro
 
     environment:
       - SUNSHINE_USER   # set in .env on the NAS; falls back to 'admin' if unset
