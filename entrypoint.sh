@@ -18,9 +18,11 @@ mkdir -p \
 chmod 700 /tmp/runtime
 
 # ── Seed default configs (only on first boot) ─────────────────────────────
+# sunshine.conf and apps.json go in /config/ root — that's where Sunshine
+# looks for them by default (and what --creds writes to without a path arg).
 for f in sunshine.conf apps.json; do
-    if [ ! -f "${CONFIG_DIR}/sunshine/${f}" ]; then
-        cp "/etc/retroshine/${f}" "${CONFIG_DIR}/sunshine/${f}"
+    if [ ! -f "${CONFIG_DIR}/${f}" ]; then
+        cp "/etc/retroshine/${f}" "${CONFIG_DIR}/${f}"
     fi
 done
 
@@ -44,7 +46,7 @@ ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight
 SUNSHINE_USER="${SUNSHINE_USER:-admin}"
 SUNSHINE_PASS="${SUNSHINE_PASS:-changeme}"
 
-/usr/bin/sunshine \
+/usr/bin/sunshine "${CONFIG_DIR}/sunshine.conf" \
     --creds "${SUNSHINE_USER}" "${SUNSHINE_PASS}" \
     || true   # non-fatal if credentials are already set
 
