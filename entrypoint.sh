@@ -14,7 +14,7 @@ mkdir -p \
     "${CONFIG_DIR}/retroarch/info" \
     "${CONFIG_DIR}/dolphin/Config" \
     "${CONFIG_DIR}/dusklight" \
-    "${CONFIG_DIR}/es-de/settings" \
+    "${CONFIG_DIR}/es-de/ES-DE/settings" \
     "${CONFIG_DIR}/logs" \
     /tmp/runtime/pulse
 chmod 700 /tmp/runtime
@@ -49,12 +49,12 @@ done
 ln -sfn /games/3ds /roms/n3ds
 
 # ── ES-DE config → /config volume ────────────────────────────────────────
-if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
+if [ ! -f "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml" ]; then
     cp /etc/retroshine/es-de/settings/es_settings.xml \
-       "${CONFIG_DIR}/es-de/settings/es_settings.xml"
+       "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml"
 fi
 # Patch critical settings (ROM path, wizard bypass) without clobbering user prefs
-patch-esde-settings "${CONFIG_DIR}/es-de/settings/es_settings.xml" 2>/dev/null || true
+patch-esde-settings "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml" 2>/dev/null || true
 
 # ── Sunshine default config dir → /config volume ──────────────────────────
 # Sunshine's GameStream XML handler ignores file_apps and always reads apps
