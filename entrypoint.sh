@@ -39,6 +39,15 @@ for f in Dolphin.ini GFX.ini; do
     fi
 done
 
+# ── ROM symlink tree (/roms → /games) ────────────────────────────────────
+# /games is read-only; /roms is a writable view with ES-DE's expected names.
+# Only n3ds differs from the NAS folder name (NAS: 3ds, ES-DE: n3ds).
+mkdir -p /roms
+for sys in gba gbc gc n64 nds ps2 psp psx snes; do
+    ln -sfn "/games/${sys}" "/roms/${sys}"
+done
+ln -sfn /games/3ds /roms/n3ds
+
 # ── ES-DE config → /config volume ────────────────────────────────────────
 if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
     cp /etc/retroshine/es-de/settings/es_settings.xml \

@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import sys
 
 REQUIRED = [
-    ('string', 'ROMDirectory', '/games'),
+    ('string', 'ROMDirectory', '/roms'),
     ('bool',   'WizardCompleted', 'true'),
 ]
 
