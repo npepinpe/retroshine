@@ -115,10 +115,11 @@ COPY config/pulse.pa                /etc/retroshine/pulse.pa
 COPY config/dolphin/Dolphin.ini     /etc/retroshine/dolphin/Dolphin.ini
 COPY config/dolphin/GFX.ini         /etc/retroshine/dolphin/GFX.ini
 COPY config/es-de/settings/es_settings.xml /etc/retroshine/es-de/settings/es_settings.xml
-COPY scripts/wait-for-x.sh         /usr/local/bin/wait-for-x.sh
-COPY entrypoint.sh                  /entrypoint.sh
+COPY scripts/wait-for-x.sh             /usr/local/bin/wait-for-x.sh
+COPY scripts/patch-esde-settings.py   /usr/local/bin/patch-esde-settings
+COPY entrypoint.sh                     /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh /usr/local/bin/wait-for-x.sh
+RUN chmod +x /entrypoint.sh /usr/local/bin/wait-for-x.sh /usr/local/bin/patch-esde-settings
 
 # Sunshine network ports
 EXPOSE 47984/tcp 47989/tcp 47990/tcp 47998/udp 47999/udp 48000/udp 48010/tcp

@@ -16,7 +16,7 @@
         },
         {
             "auto-detach": true,
-            "cmd": "dusklight",
+            "cmd": "dusklight -screen-width 1920 -screen-height 1080 -screen-fullscreen 1",
             "elevated": false,
             "exclude-global-prep-cmd": false,
             "exit-timeout": 5,

@@ -44,6 +44,8 @@ if [ ! -f "${CONFIG_DIR}/es-de/settings/es_settings.xml" ]; then
     cp /etc/retroshine/es-de/settings/es_settings.xml \
        "${CONFIG_DIR}/es-de/settings/es_settings.xml"
 fi
+# Patch critical settings (ROM path, wizard bypass) without clobbering user prefs
+patch-esde-settings "${CONFIG_DIR}/es-de/settings/es_settings.xml" 2>/dev/null || true
 
 # ── Sunshine default config dir → /config volume ──────────────────────────
 # Sunshine's GameStream XML handler ignores file_apps and always reads apps
