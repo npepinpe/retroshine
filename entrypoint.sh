@@ -57,6 +57,9 @@ ln -sfn "${CONFIG_DIR}/sunshine/covers"    /root/.config/sunshine/covers
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
 ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight
+if [ ! -f "${CONFIG_DIR}/dusklight/config.json" ]; then
+    cp /etc/retroshine/dusklight.json "${CONFIG_DIR}/dusklight/config.json"
+fi
 
 # ── udevd (hot-plug for Xorg keyboard/mouse + SDL2 gamepad) ──────────────
 # Docker blocks udevd-filtered netlink from the host; run our own daemon so

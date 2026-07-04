@@ -1,0 +1,9 @@
+{
+    "backend.graphicsBackend": "vulkan",
+    "video.enableFullscreen": false,
+    "video.rememberWindowSize": true,
+    "video.lastWindowWidth": 1920,
+    "video.lastWindowHeight": 1080,
+    "video.lockAspectRatio": false,
+    "game.internalResolutionScale": 0
+}

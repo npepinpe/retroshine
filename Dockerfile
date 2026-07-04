@@ -114,6 +114,7 @@ COPY config/retroarch.cfg           /etc/retroshine/retroarch.cfg
 COPY config/pulse.pa                /etc/retroshine/pulse.pa
 COPY config/dolphin/Dolphin.ini     /etc/retroshine/dolphin/Dolphin.ini
 COPY config/dolphin/GFX.ini         /etc/retroshine/dolphin/GFX.ini
+COPY config/dusklight.json          /etc/retroshine/dusklight.json
 COPY config/es-de/settings/es_settings.xml /etc/retroshine/es-de/settings/es_settings.xml
 COPY scripts/wait-for-x.sh             /usr/local/bin/wait-for-x.sh
 COPY scripts/patch-esde-settings.py   /usr/local/bin/patch-esde-settings
