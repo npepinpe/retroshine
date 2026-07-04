@@ -71,6 +71,20 @@ if [ ! -f "${CONFIG_DIR}/dusklight/config.json" ]; then
     cp /etc/retroshine/dusklight.json "${CONFIG_DIR}/dusklight/config.json"
 fi
 
+# ── DuckStation (PSX) → /config volume ───────────────────────────────────
+mkdir -p "${CONFIG_DIR}/duckstation"
+ln -sfn "${CONFIG_DIR}/duckstation" /root/.local/share/duckstation
+if [ ! -f "${CONFIG_DIR}/duckstation/settings.ini" ]; then
+    cp /etc/retroshine/duckstation.ini "${CONFIG_DIR}/duckstation/settings.ini"
+fi
+
+# ── PPSSPP (PSP) → /config volume ────────────────────────────────────────
+mkdir -p "${CONFIG_DIR}/ppsspp/PSP/SYSTEM"
+ln -sfn "${CONFIG_DIR}/ppsspp" /root/.config/ppsspp
+if [ ! -f "${CONFIG_DIR}/ppsspp/PSP/SYSTEM/ppsspp.ini" ]; then
+    cp /etc/retroshine/ppsspp.ini "${CONFIG_DIR}/ppsspp/PSP/SYSTEM/ppsspp.ini"
+fi
+
 # ── udevd (hot-plug for Xorg keyboard/mouse + SDL2 gamepad) ──────────────
 # Docker blocks udevd-filtered netlink from the host; run our own daemon so
 # the container receives enriched input events when Sunshine creates virtual

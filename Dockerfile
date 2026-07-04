@@ -104,6 +104,47 @@ RUN apt-get update \
     && rm /tmp/sunshine.deb \
     && rm -rf /var/lib/apt/lists/*
 
+# RetroArch cores: SNES, GBA/GBC, NDS from PPA; N64 from buildbot (not in PPA).
+RUN apt-get update && apt-get install -y \
+    unzip \
+    libretro-snes9x \
+    libretro-mgba \
+    libretro-desmume \
+    libretro-core-info \
+    retroarch-data \
+    && wget -q \
+        "https://buildbot.libretro.com/nightly/linux/x86_64/latest/mupen64plus_next_libretro.so.zip" \
+        -O /tmp/mupen64plus.zip \
+    && unzip -q /tmp/mupen64plus.zip -d /usr/lib/libretro/ \
+    && rm -rf /var/lib/apt/lists/* /tmp/mupen64plus.zip
+
+# DuckStation — PSX standalone (AppImage extracted to avoid FUSE requirement).
+RUN wget -q \
+        "https://github.com/stenzek/duckstation/releases/download/latest/DuckStation-x64.AppImage" \
+        -O /tmp/duckstation.AppImage \
+    && chmod +x /tmp/duckstation.AppImage \
+    && cd /opt && /tmp/duckstation.AppImage --appimage-extract \
+    && mv /opt/squashfs-root /opt/duckstation \
+    && rm /tmp/duckstation.AppImage
+
+RUN printf '#!/bin/sh\ncd /opt/duckstation && exec ./AppRun "$@"\n' \
+        > /usr/local/bin/duckstation-qt \
+    && chmod +x /usr/local/bin/duckstation-qt
+
+# PPSSPP — PSP standalone (AppImage extracted to avoid FUSE requirement).
+ARG PPSSPP_VERSION=1.20.4
+RUN wget -q \
+        "https://github.com/hrydgard/ppsspp/releases/download/v${PPSSPP_VERSION}/PPSSPP-v${PPSSPP_VERSION}-anylinux-x86_64.AppImage" \
+        -O /tmp/ppsspp.AppImage \
+    && chmod +x /tmp/ppsspp.AppImage \
+    && cd /opt && /tmp/ppsspp.AppImage --appimage-extract \
+    && mv /opt/squashfs-root /opt/ppsspp \
+    && rm /tmp/ppsspp.AppImage
+
+RUN printf '#!/bin/sh\ncd /opt/ppsspp && exec ./AppRun "$@"\n' \
+        > /usr/local/bin/PPSSPPSDL \
+    && chmod +x /usr/local/bin/PPSSPPSDL
+
 # Baked-in default configs — entrypoint copies these to /config on first boot
 COPY config/99-sunshine-input.rules /etc/udev/rules.d/99-sunshine-input.rules
 COPY config/supervisord.conf        /etc/retroshine/supervisord.conf
@@ -115,6 +156,8 @@ COPY config/pulse.pa                /etc/retroshine/pulse.pa
 COPY config/dolphin/Dolphin.ini     /etc/retroshine/dolphin/Dolphin.ini
 COPY config/dolphin/GFX.ini         /etc/retroshine/dolphin/GFX.ini
 COPY config/dusklight.json          /etc/retroshine/dusklight.json
+COPY config/duckstation.ini         /etc/retroshine/duckstation.ini
+COPY config/ppsspp.ini              /etc/retroshine/ppsspp.ini
 COPY config/es-de/settings/es_settings.xml /etc/retroshine/es-de/settings/es_settings.xml
 COPY scripts/wait-for-x.sh             /usr/local/bin/wait-for-x.sh
 COPY scripts/patch-esde-settings.py   /usr/local/bin/patch-esde-settings
