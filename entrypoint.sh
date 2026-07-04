@@ -56,6 +56,16 @@ ln -sfn "${CONFIG_DIR}/sunshine/covers"    /root/.config/sunshine/covers
 mkdir -p /root/.local/share/TwilitRealm
 ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight
 
+# ── udevd (hot-plug for Xorg keyboard/mouse + SDL2 gamepad) ──────────────
+# Docker blocks udevd-filtered netlink from the host; run our own daemon so
+# the container receives enriched input events when Sunshine creates virtual
+# devices via uinput at Moonlight connect time.
+mkdir -p /run/udev
+/lib/systemd/systemd-udevd &
+sleep 2
+udevadm trigger --action=add --subsystem-match=input 2>/dev/null || true
+udevadm settle --timeout=5 2>/dev/null || true
+
 # ── Sunshine credentials ──────────────────────────────────────────────────
 # Set via SUNSHINE_USER / SUNSHINE_PASS env vars.
 # --creds writes a bcrypt-hashed entry to the credentials file and exits.

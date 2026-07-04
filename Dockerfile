@@ -105,6 +105,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Baked-in default configs — entrypoint copies these to /config on first boot
+COPY config/99-sunshine-input.rules /etc/udev/rules.d/99-sunshine-input.rules
 COPY config/supervisord.conf        /etc/retroshine/supervisord.conf
 COPY config/xorg.conf               /etc/retroshine/xorg.conf
 COPY config/sunshine.conf           /etc/retroshine/sunshine.conf

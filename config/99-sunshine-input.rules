@@ -1,0 +1,5 @@
+# Sunshine virtual gamepads are misclassified as accelerometers by the standard
+# input-id rules because of their ABS axis layout. Override to joystick so SDL2
+# can find them via libudev.
+KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="Sunshine * pad*", \
+    ENV{ID_INPUT}="1", ENV{ID_INPUT_JOYSTICK}="1", ENV{ID_INPUT_ACCELEROMETER}=""
