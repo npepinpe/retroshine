@@ -57,11 +57,12 @@ fi
 patch-esde-settings "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml" 2>/dev/null || true
 
 # ── Sunshine default config dir → /config volume ──────────────────────────
-# Sunshine's GameStream XML handler ignores file_apps and always reads apps
-# from the default path; symlink both into the volume instead.
-mkdir -p /root/.config/sunshine
-ln -sfn "${CONFIG_DIR}/sunshine/apps.json" /root/.config/sunshine/apps.json
-ln -sfn "${CONFIG_DIR}/sunshine/covers"    /root/.config/sunshine/covers
+# Symlink the entire ~/.config/sunshine to the volume so all Sunshine files
+# (TLS cert/key, client certs, state, apps.json, covers) persist across
+# container restarts. Without this, Sunshine regenerates its TLS certificate
+# on every start and all paired clients must re-pair.
+mkdir -p "${CONFIG_DIR}/sunshine/covers" /root/.config
+ln -sfn "${CONFIG_DIR}/sunshine" /root/.config/sunshine
 
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
