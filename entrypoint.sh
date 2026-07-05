@@ -19,24 +19,28 @@ mkdir -p \
     /tmp/runtime/pulse
 chmod 700 /tmp/runtime
 
-# ── Seed default configs (only on first boot) ─────────────────────────────
+# ── Seed helper ───────────────────────────────────────────────────────────
+# Set RESEED_CONFIG=true to overwrite all seeded files on this boot, which
+# makes it easy to test config changes without wiping the volume manually.
+seed() {
+    local src="$1" dst="$2"
+    if [ ! -f "$dst" ] || [ "${RESEED_CONFIG:-false}" = "true" ]; then
+        cp "$src" "$dst"
+    fi
+}
+
+# ── Seed default configs ───────────────────────────────────────────────────
 # sunshine.conf goes in /config/ root (Sunshine's default config location).
 # apps.json is looked up relative to file_state, so it goes in /config/sunshine/.
-if [ ! -f "${CONFIG_DIR}/sunshine.conf" ]; then
-    cp /etc/retroshine/sunshine.conf "${CONFIG_DIR}/sunshine.conf"
-fi
+seed /etc/retroshine/sunshine.conf "${CONFIG_DIR}/sunshine.conf"
 # apps.json is managed via git; always overwrite so deploys take effect without
 # manual intervention. (Do NOT use the web UI to add apps — it won't persist.)
 cp /etc/retroshine/apps.json "${CONFIG_DIR}/sunshine/apps.json"
 
-if [ ! -f "${CONFIG_DIR}/retroarch/retroarch.cfg" ]; then
-    cp /etc/retroshine/retroarch.cfg "${CONFIG_DIR}/retroarch/retroarch.cfg"
-fi
+seed /etc/retroshine/retroarch.cfg "${CONFIG_DIR}/retroarch/retroarch.cfg"
 
 for f in Dolphin.ini GFX.ini; do
-    if [ ! -f "${CONFIG_DIR}/dolphin/Config/${f}" ]; then
-        cp "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/Config/${f}"
-    fi
+    seed "/etc/retroshine/dolphin/${f}" "${CONFIG_DIR}/dolphin/Config/${f}"
 done
 
 # ── ROM symlink tree (/roms → /games) ────────────────────────────────────
@@ -49,10 +53,8 @@ done
 ln -sfn /games/3ds /roms/n3ds
 
 # ── ES-DE config → /config volume ────────────────────────────────────────
-if [ ! -f "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml" ]; then
-    cp /etc/retroshine/es-de/settings/es_settings.xml \
-       "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml"
-fi
+seed /etc/retroshine/es-de/settings/es_settings.xml \
+     "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml"
 # Patch critical settings (ROM path, wizard bypass) without clobbering user prefs
 patch-esde-settings "${CONFIG_DIR}/es-de/ES-DE/settings/es_settings.xml" 2>/dev/null || true
 
@@ -67,23 +69,17 @@ ln -sfn "${CONFIG_DIR}/sunshine" /root/.config/sunshine
 # ── Dusklight saves → /config volume ─────────────────────────────────────
 mkdir -p /root/.local/share/TwilitRealm
 ln -sfn "${CONFIG_DIR}/dusklight" /root/.local/share/TwilitRealm/Dusklight
-if [ ! -f "${CONFIG_DIR}/dusklight/config.json" ]; then
-    cp /etc/retroshine/dusklight.json "${CONFIG_DIR}/dusklight/config.json"
-fi
+seed /etc/retroshine/dusklight.json "${CONFIG_DIR}/dusklight/config.json"
 
 # ── DuckStation (PSX) → /config volume ───────────────────────────────────
 mkdir -p "${CONFIG_DIR}/duckstation"
 ln -sfn "${CONFIG_DIR}/duckstation" /root/.local/share/duckstation
-if [ ! -f "${CONFIG_DIR}/duckstation/settings.ini" ]; then
-    cp /etc/retroshine/duckstation.ini "${CONFIG_DIR}/duckstation/settings.ini"
-fi
+seed /etc/retroshine/duckstation.ini "${CONFIG_DIR}/duckstation/settings.ini"
 
 # ── PPSSPP (PSP) → /config volume ────────────────────────────────────────
 mkdir -p "${CONFIG_DIR}/ppsspp/PSP/SYSTEM"
 ln -sfn "${CONFIG_DIR}/ppsspp" /root/.config/ppsspp
-if [ ! -f "${CONFIG_DIR}/ppsspp/PSP/SYSTEM/ppsspp.ini" ]; then
-    cp /etc/retroshine/ppsspp.ini "${CONFIG_DIR}/ppsspp/PSP/SYSTEM/ppsspp.ini"
-fi
+seed /etc/retroshine/ppsspp.ini "${CONFIG_DIR}/ppsspp/PSP/SYSTEM/ppsspp.ini"
 
 # ── udevd (hot-plug for Xorg keyboard/mouse + SDL2 gamepad) ──────────────
 # Docker blocks udevd-filtered netlink from the host; run our own daemon so
